@@ -1,0 +1,31 @@
+#!/bin/bash
+
+build() {
+    add_module "cdrom"
+    add_module "aufs"
+    add_module "squashfs"
+    add_module "isofs"
+    add_module "loop"
+    add_module "usb_storage"
+    add_module "sd_mod"
+    add_module "sr_mod"
+    add_module "virtio_pci"
+    add_module "virtio_blk"
+
+    add_dir /rw_branch
+    add_dir /ro_branch
+    add_dir /copytoram
+    add_dir /bootmnt
+
+    add_runscript
+
+    add_binary /lib/udev/cdrom_id
+    add_binary blockdev
+    add_binary losetup
+    add_binary mountpoint
+
+    add_file /lib/udev/rules.d/60-cdrom_id.rules
+}
+
+# vim: set ft=sh ts=4 sw=4 et:
+

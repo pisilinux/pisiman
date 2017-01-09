@@ -1,0 +1,464 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>647</width>
+    <height>405</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Pisiman</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="raw.qrc">
+    <normaloff>:/raw/pics/pardusman.png</normaloff>:/raw/pics/pardusman.png</iconset>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QGridLayout" name="gridLayout_5">
+    <item row="0" column="0">
+     <widget class="QFrame" name="frame">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <layout class="QGridLayout" name="gridLayout_2">
+       <item row="0" column="0">
+        <layout class="QGridLayout" name="gridLayout">
+         <item row="2" column="3">
+          <widget class="QPushButton" name="pushBrowseRepository">
+           <property name="text">
+            <string>Browse</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="0">
+          <widget class="QLabel" name="label_3">
+           <property name="text">
+            <string>Repository</string>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="3">
+          <widget class="QPushButton" name="pushBrowseWorkFolder">
+           <property name="text">
+            <string>Browse</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="0">
+          <widget class="QLabel" name="label">
+           <property name="text">
+            <string>Image title</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="2">
+          <widget class="QLineEdit" name="lineRepository">
+           <property name="toolTip">
+            <string>Local or remote URL of the repository index from which the image will be created</string>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="3">
+          <widget class="QPushButton" name="pushBrowsePluginPackage">
+           <property name="text">
+            <string>Browse</string>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="0">
+          <widget class="QLabel" name="label_6">
+           <property name="text">
+            <string>Plugin package</string>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="2">
+          <widget class="QLineEdit" name="lineWorkFolder">
+           <property name="toolTip">
+            <string>Path to the directory where Pardusman will work and create the related files and directories</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="0">
+          <widget class="QLabel" name="label_4">
+           <property name="text">
+            <string>Config files</string>
+           </property>
+          </widget>
+         </item>
+         <item row="6" column="3">
+          <widget class="QComboBox" name="comboCompression">
+           <item>
+            <property name="text">
+             <string>xz</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>gzip</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>lzma</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>lzo</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+         <item row="5" column="0">
+          <widget class="QLabel" name="label_2">
+           <property name="text">
+            <string>Work folder</string>
+           </property>
+          </widget>
+         </item>
+         <item row="6" column="2">
+          <widget class="QComboBox" name="comboType">
+           <item>
+            <property name="text">
+             <string>None</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Lxdm</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Lightdm</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Mdm</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Sddm</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+         <item row="1" column="2" colspan="2">
+          <widget class="QLineEdit" name="lineParameters">
+           <property name="toolTip">
+            <string>Extra parameters to pass to the kernel command line during boot.</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="2" colspan="2">
+          <widget class="QLineEdit" name="lineTitle">
+           <property name="toolTip">
+            <string>The title of the Pardus image</string>
+           </property>
+          </widget>
+         </item>
+         <item row="6" column="0">
+          <widget class="QLabel" name="label_7">
+           <property name="text">
+            <string>Display Manager</string>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="2">
+          <widget class="QLineEdit" name="linePluginPackage"/>
+         </item>
+         <item row="3" column="3">
+          <widget class="QPushButton" name="pushBrowseConfigFiles">
+           <property name="text">
+            <string>Browse</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QLabel" name="label_5">
+           <property name="text">
+            <string>Extra parameters</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="2">
+          <widget class="QLineEdit" name="lineConfigFiles">
+           <property name="toolTip">
+            <string>Path to the local directory config files</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item row="1" column="0">
+     <layout class="QVBoxLayout" name="terminalLayout"/>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>647</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>Fi&amp;le</string>
+    </property>
+    <addaction name="actionNew"/>
+    <addaction name="actionOpen"/>
+    <addaction name="separator"/>
+    <addaction name="actionSave"/>
+    <addaction name="actionSaveAs"/>
+    <addaction name="separator"/>
+    <addaction name="actionExit"/>
+   </widget>
+   <widget class="QMenu" name="menuProject">
+    <property name="title">
+     <string>Pro&amp;ject</string>
+    </property>
+    <addaction name="actionUpdateRepo"/>
+    <addaction name="separator"/>
+    <addaction name="actionRootImagePackages"/>
+    <addaction name="actionDesktopImagePackages"/>
+    <addaction name="actionLivecdImagePackages"/>
+    <addaction name="actionLanguages"/>
+    <addaction name="separator"/>
+    <addaction name="actionMake_Repo"/>
+    <addaction name="separator"/>
+    <addaction name="actionMake_Image"/>
+    <addaction name="actionMake_Squashfs"/>
+    <addaction name="actionMake_Iso"/>
+   </widget>
+   <widget class="QMenu" name="menuiso">
+    <property name="title">
+     <string>&amp;Helper</string>
+    </property>
+    <addaction name="actionMakeImage"/>
+   </widget>
+   <addaction name="menuFile"/>
+   <addaction name="menuProject"/>
+   <addaction name="menuiso"/>
+  </widget>
+  <action name="actionNew">
+   <property name="icon">
+    <iconset resource="raw.qrc">
+     <normaloff>:/raw/pics/document-new.png</normaloff>:/raw/pics/document-new.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;New</string>
+   </property>
+  </action>
+  <action name="actionOpen">
+   <property name="icon">
+    <iconset resource="raw.qrc">
+     <normaloff>:/raw/pics/document-open.png</normaloff>:/raw/pics/document-open.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Open...</string>
+   </property>
+  </action>
+  <action name="actionSave">
+   <property name="icon">
+    <iconset resource="raw.qrc">
+     <normaloff>:/raw/pics/document-save.png</normaloff>:/raw/pics/document-save.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Save</string>
+   </property>
+  </action>
+  <action name="actionSaveAs">
+   <property name="icon">
+    <iconset resource="raw.qrc">
+     <normaloff>:/raw/pics/document-save-as.png</normaloff>:/raw/pics/document-save-as.png</iconset>
+   </property>
+   <property name="text">
+    <string>Sa&amp;ve As...</string>
+   </property>
+  </action>
+  <action name="actionExit">
+   <property name="icon">
+    <iconset resource="raw.qrc">
+     <normaloff>:/raw/pics/application-exit.png</normaloff>:/raw/pics/application-exit.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Exit</string>
+   </property>
+  </action>
+  <action name="actionUpdateRepo">
+   <property name="icon">
+    <iconset resource="raw.qrc">
+     <normaloff>:/raw/pics/view-refresh.png</normaloff>:/raw/pics/view-refresh.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Update Repo</string>
+   </property>
+  </action>
+  <action name="actionPackages">
+   <property name="icon">
+    <iconset resource="raw.qrc">
+     <normaloff>:/raw/pics/applications-other.png</normaloff>:/raw/pics/applications-other.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Packages...</string>
+   </property>
+  </action>
+  <action name="actionRootImagePackages">
+   <property name="icon">
+    <iconset resource="raw.qrc">
+     <normaloff>:/raw/pics/applications-other.png</normaloff>:/raw/pics/applications-other.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Root Image Packages...</string>
+   </property>
+  </action>
+  <action name="actionLanguages">
+   <property name="icon">
+    <iconset resource="raw.qrc">
+     <normaloff>:/raw/pics/applications-education-language.png</normaloff>:/raw/pics/applications-education-language.png</iconset>
+   </property>
+   <property name="text">
+    <string>La&amp;nguages...</string>
+   </property>
+  </action>
+  <action name="actionMakeImage">
+   <property name="icon">
+    <iconset resource="raw.qrc">
+     <normaloff>:/raw/pics/media-optical.png</normaloff>:/raw/pics/media-optical.png</iconset>
+   </property>
+   <property name="text">
+    <string>Make &amp;Image</string>
+   </property>
+  </action>
+  <action name="actionLivecdImagePackages">
+   <property name="icon">
+    <iconset resource="raw.qrc">
+     <normaloff>:/raw/pics/applications-other.png</normaloff>:/raw/pics/applications-other.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Live Util Packages</string>
+   </property>
+  </action>
+  <action name="actionDesktopImagePackages">
+   <property name="icon">
+    <iconset resource="raw.qrc">
+     <normaloff>:/raw/pics/applications-other.png</normaloff>:/raw/pics/applications-other.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Desktop Image Packages</string>
+   </property>
+  </action>
+  <action name="action">
+   <property name="icon">
+    <iconset resource="raw.qrc">
+     <normaloff>:/raw/pics/folder-new.png</normaloff>:/raw/pics/folder-new.png</iconset>
+   </property>
+   <property name="text">
+    <string>Ma&amp;ke Repo</string>
+   </property>
+   <property name="toolTip">
+    <string>Create  only local repo </string>
+   </property>
+  </action>
+  <action name="action_2">
+   <property name="icon">
+    <iconset resource="raw.qrc">
+     <normaloff>:/raw/pics/list-add.png</normaloff>:/raw/pics/list-add.png</iconset>
+   </property>
+   <property name="text">
+    <string>Make &amp;Squashfs</string>
+   </property>
+   <property name="toolTip">
+    <string>Make Only Squashfs Image</string>
+   </property>
+  </action>
+  <action name="action_3">
+   <property name="icon">
+    <iconset resource="raw.qrc">
+     <normaloff>:/raw/pics/media-optical.png</normaloff>:/raw/pics/media-optical.png</iconset>
+   </property>
+   <property name="text">
+    <string>Make &amp;Iso</string>
+   </property>
+   <property name="toolTip">
+    <string>skip other steps</string>
+   </property>
+  </action>
+  <action name="actionMake_Repo">
+   <property name="icon">
+    <iconset resource="raw.qrc">
+     <normaloff>:/raw/pics/folder-new.png</normaloff>:/raw/pics/folder-new.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Make Repo</string>
+   </property>
+  </action>
+  <action name="actionMake_Squashfs">
+   <property name="icon">
+    <iconset resource="raw.qrc">
+     <normaloff>:/raw/pics/list-add.png</normaloff>:/raw/pics/list-add.png</iconset>
+   </property>
+   <property name="text">
+    <string>Make &amp;Squashfs</string>
+   </property>
+  </action>
+  <action name="actionMake_Iso">
+   <property name="icon">
+    <iconset resource="raw.qrc">
+     <normaloff>:/raw/pics/media-optical.png</normaloff>:/raw/pics/media-optical.png</iconset>
+   </property>
+   <property name="text">
+    <string>Ma&amp;ke Iso</string>
+   </property>
+  </action>
+  <action name="actionMake_Image">
+   <property name="icon">
+    <iconset resource="raw.qrc">
+     <normaloff>:/raw/pics/applications-other.png</normaloff>:/raw/pics/applications-other.png</iconset>
+   </property>
+   <property name="text">
+    <string>Make &amp;Image</string>
+   </property>
+  </action>
+ </widget>
+ <tabstops>
+  <tabstop>lineTitle</tabstop>
+  <tabstop>lineParameters</tabstop>
+  <tabstop>lineRepository</tabstop>
+  <tabstop>lineConfigFiles</tabstop>
+  <tabstop>linePluginPackage</tabstop>
+  <tabstop>lineWorkFolder</tabstop>
+  <tabstop>comboType</tabstop>
+  <tabstop>pushBrowseRepository</tabstop>
+  <tabstop>pushBrowseConfigFiles</tabstop>
+  <tabstop>pushBrowsePluginPackage</tabstop>
+  <tabstop>pushBrowseWorkFolder</tabstop>
+  <tabstop>comboCompression</tabstop>
+ </tabstops>
+ <resources>
+  <include location="raw.qrc"/>
+ </resources>
+ <connections/>
+</ui>

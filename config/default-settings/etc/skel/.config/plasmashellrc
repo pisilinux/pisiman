@@ -1,0 +1,6 @@
+[PlasmaRunnerManager]
+LaunchCounts=
+pluginWhiteList=services,places,shell,bookmarks,recentdocuments,locations,baloosearch
+
+[Updates]
+performed=/usr/share/plasma/shells/org.kde.plasma.desktop/contents/updates/obsolete_kickoffrc.js

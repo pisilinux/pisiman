@@ -1,0 +1,260 @@
+# kernel_cmdline <param> <default>
+# Looks for a parameter on the kernel's boot-time command line.
+#
+# returns: 0 if param was found. Also prints its value if it was a K=V param.
+#          1 if it was not. Also prints value passed as <default>
+#
+
+kernel_cmdline ()
+{
+    for param in $(/bin/cat /proc/cmdline); do
+        case "${param}" in
+            $1=*) echo "${param##*=}"; return 0 ;;
+            $1) return 0 ;;
+            *) continue ;;
+        esac
+    done
+    [ -n "${2}" ] && echo "${2}"
+    return 1
+}
+
+# 1$ : kernel argument to check
+overlay_arg_available() {
+	for arg in $(echo "$(kernel_cmdline overlay)" | /bin/sed 's/,/ /g')
+	do
+		[ "${arg}" == "$1" ] && return 0
+	done
+
+	return 1
+}
+
+# args: source, mountpoint
+_mnt_aufs() {
+    local src="${1}"
+    local mnt="${2}"
+    msg "::: Adding new aufs branch: ${src} to ${mnt}"
+    mkdir -p "${mnt}"
+    /bin/mount -t aufs -o remount,append:"${src}"=ro none "${mnt}"
+}
+
+# args: source, mountpoint
+_mnt_bind() {
+    local src="${1}"
+    local mnt="${2}"
+    msg "::: Binding ${src} to ${mnt}"
+    mkdir -p "${mnt}"
+    /bin/mount -o bind "${src}" "${mnt}"
+}
+
+# args: /path/to/image_file, mountpoint
+_mnt_squashfs() {
+    local img="${1}"
+    local mnt="${2}"
+    local img_fullname="${img##*/}";
+    local img_name="${img_fullname%.*}"
+    local tmp_mnt="/ro_branch/${img_name}"
+
+    if [ "${copytoram}" = "y" ]; then
+        msg -n ":: Copying squashfs image to RAM..."
+        /bin/cp "${img}" "/copytoram/${img_fullname}"
+        if [ $? -ne 0 ]; then
+            echo ">> ERROR: while copy ${img} to /copytoram/${img_fullname}"
+            launch_interactive_shell
+        fi
+        img="/copytoram/${img_fullname}"
+        msg "done."
+    fi
+
+    mkdir -p "${tmp_mnt}"
+    /bin/mount -r -t squashfs "${img}" "${tmp_mnt}"
+    if [ $? -ne 0 ]; then
+        echo ">> ERROR: while mounting ${img} to ${tmp_mnt}"
+        launch_interactive_shell
+    fi
+
+    if [ "/${mnt#/*/}" = "/" ]; then
+        _mnt_aufs "${tmp_mnt}" "${mnt}"
+    else
+        _mnt_bind "${tmp_mnt}" "${mnt}"
+    fi
+}
+
+run_hook() {
+    modprobe loop
+    if [ "x${arch}" = "x" ]; then
+        arch="$(uname -m)"
+    fi
+
+    if [ "x${rw_branch_size}" = "x" ]; then
+        rw_branch_size="75%"
+    fi
+
+    if [ "x${copytoram_size}" = "x" ]; then
+        copytoram_size="75%"
+    fi
+
+    if [ "x${misobasedir}" = "x" ]; then
+        misobasedir="pisi"
+    fi
+
+    if [ "x${isomounts}" != "x" ]; then
+        isomounts="/bootmnt/${isomounts}"
+    else
+        isomounts="/bootmnt/${misobasedir}/isomounts"
+    fi
+
+    # set mount handler for miso
+    mount_handler="miso_mount_handler"
+}
+
+testdevice() {
+    fstype=$( blkid -s TYPE -o value ${MDEV} )
+    mount -r -t ${fstype} -o noatime "${MDEV}" "/bootmnt" >/dev/null 2>/dev/null
+    if [ $? -eq 0 ]; then
+        if [ -f "/bootmnt/.miso" ]; then
+            msg "::: INFO: miso system at ${MDEV}"
+            found="yes"
+        else
+            /bin/umount "/bootmnt/" 2>/dev/null
+            msg  "::: INFO: No miso system at ${MDEV}"
+            MDEV=""
+        fi
+    else
+        msg ">> ERROR: Couldn't mount ${MDEV}"
+        MDEV=""
+    fi
+}
+
+probedevice() {
+# Loop device test every second up to some limit
+    if [ "x${usbdelay}" != "x" ]; then
+        waittime=${usbdelay}
+    else
+        waittime=35
+    fi
+    waitcount=0
+    while [ ${waittime} -ne ${waitcount} ]; do
+        # first we look for root, e.g. /dev/sda1 to see if .miso will be found
+        if [ "x${root}" != "x" ]; then
+            [ ${waitcount} -eq 0 ] && msg ":: Looking for ${root}"
+            if [ -e ${root} ]; then
+                MDEV=${root}
+                testdevice
+            fi
+        fi
+
+        # if still not found, we will look for misolabel
+        if [ "x${misolabel}" != "x" ]; then
+            [ ${waitcount} -eq 0 ] && msg ":: Looking for LABEL ${misolabel}"
+            MDEV=$( blkid -L ${misolabel} )
+            if [ "x${MDEV}" != "x" ]; then
+                testdevice
+            else
+                msg "::: INFO: LABEL ${misolabel} is not valid!"
+                misolabel=""
+            fi
+        fi
+
+        # still nothing found, we will look for boot device
+        if [ -z "${found}" ]; then
+            [ ${waitcount} -eq 0 ] && msg ":: Looking for boot device"
+            if [ "x${nocd}" = "x" ]; then
+                # Look for CD
+                cdroms=$( /bin/cat /proc/sys/dev/cdrom/info | { while read a b c; do
+                        if [ "${a}" = "drive" -a "${b}" = "name:" ]; then
+                            echo "${c}"
+                            break
+                        fi
+                    done
+                } )
+                for i in ${cdroms}; do
+                    MDEV=/dev/${i}
+                    testdevice
+                    if [ "x${MDEV}" != "x" ]; then
+                        break
+                    fi
+                done
+            fi
+
+            # Test partitions
+            if [ "x${MDEV}" = "x" ]; then
+                for d in /dev/sd[a-z][0-9]*; do
+                    MDEV=${d}
+                    testdevice
+                    if [ "x${MDEV}" != "x" ]; then
+                        break
+                    fi
+                done
+            fi
+
+        fi
+
+        [ "x${MDEV}" != "x" ] && break
+
+        /bin/sleep 1
+        waitcount=$(( ${waitcount} + 1 ))
+    done
+}
+
+miso_mount_handler() {
+    local newroot="${1}"
+    local found
+
+    # Probe all devices
+    probedevice
+    
+    if [ -z "${found}" ]; then
+        echo ">> ERROR: unable to find boot device"
+        echo "   Falling back to interactive prompt"
+        echo "   You can try to fix the problem manually, log out when you are finished"
+        launch_interactive_shell
+    fi
+
+    if [ "${copytoram}" = "y" ]; then
+        msg -n ":: Mounting /copytoram (tmpfs) filesystem, size=${copytoram_size}..."
+        mount -t tmpfs -o "size=${copytoram_size}",mode=0755 copytoram /copytoram
+        msg "done."
+    fi
+
+    msg -n ":: Mounting rw_branch (tmpfs) filesystem, size=${rw_branch_size}..."
+    mount -t tmpfs -o "size=${rw_branch_size}",mode=0755 rw_branch /rw_branch
+    msg "done."
+
+    msg ":: Mounting root (aufs) filesystem"
+    /bin/mount -t aufs -o dirs=/rw_branch=rw union "${newroot}"
+    if [ $? -ne 0 ]; then
+        echo ">> ERROR: while mounting root (aufs) filesystem."
+        launch_interactive_shell
+    fi
+
+    msg ":: Mounting images"
+    while read img imgarch mountpoint type kernelarg; do
+        # check if this line is a comment (starts with #)
+        [ "${img#"#"}" != "${img}" ] && continue
+
+        [ "$imgarch" != "$arch" ] && continue
+
+        [ ! -r "/bootmnt/${misobasedir}/${img}" ] && continue
+
+        # check if the overlay should be loaded
+        overlay_arg_available "$kernelarg"
+
+        if [ $? == 1 ] && [ "$kernelarg" != "" ]; then
+	        continue
+        fi
+
+        if [ "${type}" = "bind" ]; then
+            _mnt_bind "/bootmnt/${misobasedir}/${img}" "${newroot}${mountpoint}"
+        elif [ "${type}" = "squashfs" ]; then
+            _mnt_squashfs "/bootmnt/${misobasedir}/${img}" "${newroot}${mountpoint}"
+        fi
+    done < "${isomounts}"
+
+    if [ "${copytoram}" = "y" ]; then
+        /bin/umount /bootmnt
+    else
+        _mnt_bind /bootmnt "${newroot}/bootmnt"
+    fi
+}
+
+# vim:ft=sh:ts=4:sw=4:et:
